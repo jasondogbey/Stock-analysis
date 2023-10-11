@@ -14,7 +14,8 @@ import requests
 #         else:
 #             print('Please enter a or q')
 
-url = "https://stockanalysis.com/stocks/zbra/financials/?p=quarterly"
+# url = "https://stockanalysis.com/stocks/zbra/financials/?p=quarterly"
+url = "https://stockanalysis.com/stocks/aapl/financials/"
 response = requests.get(url).text
 data = BeautifulSoup(response, "html.parser")
 
@@ -86,3 +87,31 @@ for index, row in enumerate(trs):
     # Check if a td element is found (to exclude header rows without td)
     
     # print(first_cell.text)
+
+print(f'Len of years list {len(years_list)}')
+print(f'Len of revenue_list {len(revenue_list)}')
+print(f'Len of net_income_list {len(net_income_list)}')
+print(f'Len of share_outstanding_basic_list {len(share_outstanding_basic_list)}')
+print(f'Len of share_outstanding_diluted_list {len(share_outstanding_diluted_list)}')
+print(f'Len of eps_diluted_list {len(eps_diluted_list)}')
+print(f'Len of free_cash_flow_list {len(free_cash_flow_list)}')
+print(f'Len of free_cash_flow_per_share_list {len(free_cash_flow_per_share_list)}')
+
+revenue_list_without_spaces = [i for i in revenue_list if i != ' ']
+net_income_list_without_spaces = [i for i in net_income_list if i != ' ']
+share_outstanding_basic_list_without_spaces = [i for i in share_outstanding_basic_list if i != ' ']
+share_outstanding_diluted_list_without_spaces = [i for i in share_outstanding_diluted_list if i != ' ']
+eps_diluted_list_without_spaces = [i for i in eps_diluted_list if i != ' ']
+free_cash_flow_list_without_spaces = [i for i in free_cash_flow_list if i != ' ']
+free_cash_flow_per_share_list_without_spaces = [i for i in free_cash_flow_per_share_list if i != ' ']
+
+clean_years_list = years_list[:-1]
+clean_revenue_list = revenue_list_without_spaces[:-1]
+clean_net_income_list = net_income_list_without_spaces[:-1]
+clean_share_outstanding_basic_list = share_outstanding_basic_list_without_spaces[:-1]
+clean_share_outstanding_diluted_list = share_outstanding_diluted_list_without_spaces[:-1]
+clean_eps_diluted_list = eps_diluted_list_without_spaces[:-1]
+clean_free_cash_flow_list = free_cash_flow_list_without_spaces[:-1]
+clean_free_cash_flow_per_share_list = free_cash_flow_per_share_list_without_spaces[:-1]
+
+print(clean_net_income_list)
