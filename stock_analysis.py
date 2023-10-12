@@ -24,11 +24,14 @@ def get_url_and_search_data():
 
 url, ticker, period = get_url_and_search_data()
 response = requests.get(url)
+
+# Check if the request was successful
 if response.status_code != 200:
     print(f"Failed to fetch data for {ticker} - Check if the ticker is valid or the website structure has changed.")
 else:
     data = BeautifulSoup(response.text, "html.parser")
 
+    # Extract years from the table header
     table = data.table
     tr = table.contents
     header_row = tr[0]
@@ -37,17 +40,20 @@ else:
     for th in header_th_elements:
         years_list.append(th.text)
 
+    # Find the table body
     tablebody = data.tbody
 
     # Find all the table rows within the table body
     trs = tablebody.find_all('tr')
 
+    # Initialize lists to store data
     revenue_list, net_income_list, share_outstanding_basic_list, share_outstanding_diluted_list, eps_diluted_list, free_cash_flow_list, free_cash_flow_per_share_list = [], [], [], [], [], [], []
-    # Loop through the rows, excluding the header row
+    
     for index, row in enumerate(trs):
         # Find the first cell (td) in each row
         first_cell = row.find('td')
 
+        # Check for various data categories
         if 'Revenue' in first_cell.text and len(first_cell.text) < 10:
             revenue_row = trs[index]
             for revenue in revenue_row:
@@ -77,7 +83,7 @@ else:
             for free_cash_flow_per_share in free_cash_flow_per_share_row:
                 free_cash_flow_per_share_list.append(free_cash_flow_per_share.text)
         
-
+    # Remove empty spaces from lists
     revenue_list_without_spaces = [i for i in revenue_list if i != ' ']
     net_income_list_without_spaces = [i for i in net_income_list if i != ' ']
     share_outstanding_basic_list_without_spaces = [i for i in share_outstanding_basic_list if i != ' ']
@@ -86,6 +92,7 @@ else:
     free_cash_flow_list_without_spaces = [i for i in free_cash_flow_list if i != ' ']
     free_cash_flow_per_share_list_without_spaces = [i for i in free_cash_flow_per_share_list if i != ' ']
 
+    # Clean the years list (remove the last element)
     clean_years_list = years_list[:-1]
     clean_revenue_list = revenue_list_without_spaces[:-1]
     clean_net_income_list = net_income_list_without_spaces[:-1]
@@ -95,6 +102,7 @@ else:
     clean_free_cash_flow_list = free_cash_flow_list_without_spaces[:-1]
     clean_free_cash_flow_per_share_list = free_cash_flow_per_share_list_without_spaces[:-1]
 
+    # Create a new Excel workbook and save the data
     wb = Workbook()
     ws = wb.active
     ws.title = f"{ticker.upper()} {period.upper()} ANALYSIS"
