@@ -10,14 +10,14 @@ def get_url_and_search_data():
     while True:
         ticker = input('Please enter ticker: ').lower()
         if is_valid_ticker(ticker):
-            user_input = input('Do you want annually or quarterly data? (a/q) ').lower()
+            user_input = input('Do you want annual or quarterly data? (a/q) ').lower()
             if user_input == 'a' or user_input == 'q':
                 period = 'annual' if user_input == 'a' else 'quarterly'
                 parameter = '' if user_input == 'a' else '?p=quarterly'
                 url = f"https://stockanalysis.com/stocks/{ticker}/financials/{parameter}"
                 return url, ticker, period
             else:
-                print('Please enter "a" for annually or "q" for quarterly.')
+                print('Please enter "a" for annual or "q" for quarterly.')
         else:
             print('Invalid ticker symbol. Ticker should only contain letters.')
 
