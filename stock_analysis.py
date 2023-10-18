@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from openpyxl import Workbook
 
+# Function to validate tickers
 def is_valid_ticker(ticker):
     ticker_without_space = ticker.replace(" ", "")
     ticker_list = ticker_without_space.split(",")
@@ -10,7 +11,7 @@ def is_valid_ticker(ticker):
             return False
     return ticker_list
 
-
+# Function to get URLs and search data
 def get_url_and_search_data():
     while True:
         ticker = input('Please enter tickers separated by a comma: ').lower()
@@ -32,7 +33,7 @@ def get_url_and_search_data():
         else:
             print('Please enter "a" for annual or "q" for quarterly.')
         
-
+# Function to fetch data from a URL
 def fetch_data(ticker, url):
     response = requests.get(url)
     result = []
@@ -125,6 +126,7 @@ def fetch_data(ticker, url):
         result.append(clean_free_cash_flow_per_share_list)
     return result
 
+# Function to save data to an Excel file
 def save_to_excel_file(results):
     # Create a new Excel workbook and save the data
     wb = Workbook()
@@ -142,6 +144,7 @@ def save_to_excel_file(results):
     wb.save(f"{file_name}.xlsx")
     print(f"Your data has been saved to an Excel file with filename {file_name}.xlsx")
 
+# Main function
 def main():
     url_list, ticker_list = get_url_and_search_data()
     url_ticker_dict = dict(zip(ticker_list, url_list))
