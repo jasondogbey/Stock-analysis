@@ -16,20 +16,23 @@ def get_url_and_search_data():
         ticker = input('Please enter tickers separated by a comma: ').lower()
         if is_valid_ticker(ticker):
             ticker_list = is_valid_ticker(ticker)
-            user_input = input('Do you want annual or quarterly data? (a/q) ').lower()
-            if user_input == 'a' or user_input == 'q':
-                period = 'annual' if user_input == 'a' else 'quarterly'
-                parameter = '' if user_input == 'a' else '?p=quarterly'
-                url_list = []
-                for ticker in ticker_list:
-                    url = f"https://stockanalysis.com/stocks/{ticker}/financials/{parameter}"
-                    url_list.append(url)
-                return url_list, ticker_list, period
-            else:
-                print('Please enter "a" for annual or "q" for quarterly.')
+            break
         else:
             print('Invalid ticker symbol. Ticker should only contain letters.')
 
+    while True:
+        user_input = input('Do you want annual or quarterly data? (a/q) ').lower()
+        if user_input == 'a' or user_input == 'q':
+            period = 'annual' if user_input == 'a' else 'quarterly'
+            parameter = '' if user_input == 'a' else '?p=quarterly'
+            url_list = []
+            for ticker in ticker_list:
+                url = f"https://stockanalysis.com/stocks/{ticker}/financials/{parameter}"
+                url_list.append(url)
+            return url_list, ticker_list, period
+        else:
+            print('Please enter "a" for annual or "q" for quarterly.')
+        
 
 
 def fetch_data(ticker, url):
@@ -37,8 +40,8 @@ def fetch_data(ticker, url):
     result = []
     # Check if the request was successful
     if response.status_code != 200:
-        print(f"Failed to fetch data for {ticker} - Check if the ticker is valid or the website structure has changed.")
-        result.append(f"Failed to fetch data for {ticker} - Check if the ticker is valid or the website structure has changed.")
+        error_message = f"Failed to fetch data for {ticker} - Check if the ticker is valid or the website structure has changed."
+        result.append([error_message])
         return result
     else:
         data = BeautifulSoup(response.text, "html.parser")
@@ -139,7 +142,7 @@ def save_to_excel_file(results):
     wb.remove(default_sheet)
     file_name = input("Please enter a name for the excel file: ")
     wb.save(f"{file_name}.xlsx")
-    print(f"Data for {file_name} has been successfully scraped and saved to an Excel file.")
+    print(f"Your data has been saved to an Excel file with filename {file_name}.xlsx")
 
 url_list, ticker_list, period = get_url_and_search_data()
 url_ticker_dict = dict(zip(ticker_list, url_list))
