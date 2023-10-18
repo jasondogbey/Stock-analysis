@@ -23,17 +23,15 @@ def get_url_and_search_data():
     while True:
         user_input = input('Do you want annual or quarterly data? (a/q) ').lower()
         if user_input == 'a' or user_input == 'q':
-            period = 'annual' if user_input == 'a' else 'quarterly'
             parameter = '' if user_input == 'a' else '?p=quarterly'
             url_list = []
             for ticker in ticker_list:
                 url = f"https://stockanalysis.com/stocks/{ticker}/financials/{parameter}"
                 url_list.append(url)
-            return url_list, ticker_list, period
+            return url_list, ticker_list
         else:
             print('Please enter "a" for annual or "q" for quarterly.')
         
-
 
 def fetch_data(ticker, url):
     response = requests.get(url)
@@ -144,12 +142,16 @@ def save_to_excel_file(results):
     wb.save(f"{file_name}.xlsx")
     print(f"Your data has been saved to an Excel file with filename {file_name}.xlsx")
 
-url_list, ticker_list, period = get_url_and_search_data()
-url_ticker_dict = dict(zip(ticker_list, url_list))
-results = []
-for ticker, url in url_ticker_dict.items():
-    result = fetch_data(ticker, url)
-    result_dict = {ticker: result}
-    results.append(result_dict)
-  
-save_to_excel_file(results)
+def main():
+    url_list, ticker_list = get_url_and_search_data()
+    url_ticker_dict = dict(zip(ticker_list, url_list))
+    results = []
+    for ticker, url in url_ticker_dict.items():
+        result = fetch_data(ticker, url)
+        result_dict = {ticker: result}
+        results.append(result_dict)
+    
+    save_to_excel_file(results)
+
+if __name__ == "__main__":
+    main()
